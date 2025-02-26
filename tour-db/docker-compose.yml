@@ -1,0 +1,31 @@
+name: tour-project
+
+services:
+  tour-db:
+    image: postgres:17.4-alpine3.21
+
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=tourdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - tour-db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  tour-db:
+    driver: local
+
+networks:
+  default:
+    name: tour_network
+    external: true
+
